@@ -1,0 +1,135 @@
+# Test configuration for ESPHome Dew Point Component
+# This is a complete working example for testing
+
+esphome:
+  name: dew-point-test
+  friendly_name: Dew Point Test Device
+
+esp8266:
+  board: d1_mini
+
+# Enable logging
+logger:
+  level: DEBUG
+  logs:
+    dew_point: VERBOSE
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "your-32-char-encryption-key-here"
+
+ota:
+  password: "your-ota-password"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Dew-Point-Test Fallback"
+    password: "fallbackpass"
+
+captive_portal:
+
+# Web server for easy monitoring
+web_server:
+  port: 80
+
+# Example with DHT22 sensor
+sensor:
+  # DHT22 Temperature and Humidity Sensor
+  - platform: dht
+    pin: GPIO5
+    model: DHT22
+    temperature:
+      id: dht_temperature
+      name: "DHT22 Temperature"
+      accuracy_decimals: 1
+      filters:
+        - offset: 0.0  # Add calibration offset if needed
+    humidity:
+      id: dht_humidity
+      name: "DHT22 Humidity"
+      accuracy_decimals: 0
+      filters:
+        - offset: 0.0  # Add calibration offset if needed
+    update_interval: 30s
+
+  # Dew Point Calculation
+  - platform: dew_point
+    name: "DHT22 Dew Point"
+    id: dht_dew_point
+    temperature: dht_temperature
+    humidity: dht_humidity
+    icon: "mdi:water-thermometer"
+    accuracy_decimals: 1
+
+  # WiFi Signal Strength
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 60s
+
+  # Uptime
+  - platform: uptime
+    name: "Uptime"
+
+# Text sensors
+text_sensor:
+  # Comfort level based on dew point
+  - platform: template
+    name: "Comfort Level"
+    update_interval: 60s
+    lambda: |-
+      float dew_point = id(dht_dew_point).state;
+      
+      if (std::isnan(dew_point)) {
+        return {"Unknown"};
+      } else if (dew_point < 10) {
+        return {"Dry"};
+      } else if (dew_point < 13) {
+        return {"Comfortable"};
+      } else if (dew_point < 16) {
+        return {"Slightly Humid"};
+      } else if (dew_point < 18) {
+        return {"Somewhat Uncomfortable"};
+      } else if (dew_point < 21) {
+        return {"Uncomfortable"};
+      } else if (dew_point < 24) {
+        return {"Very Uncomfortable"};
+      } else {
+        return {"Oppressive"};
+      }
+
+  # ESP Info
+  - platform: version
+    name: "ESPHome Version"
+
+# Binary sensors
+binary_sensor:
+  # High humidity alert
+  - platform: template
+    name: "High Humidity Alert"
+    lambda: |-
+      float dew_point = id(dht_dew_point).state;
+      return dew_point > 16.0;
+
+  # Mold risk alert
+  - platform: template
+    name: "Mold Risk Alert"
+    lambda: |-
+      float dew_point = id(dht_dew_point).state;
+      float humidity = id(dht_humidity).state;
+      return (dew_point > 15.0 || humidity > 70.0);
+
+# Status LED (optional)
+status_led:
+  pin:
+    number: GPIO2
+    inverted: true
+
+# Switch for testing (optional)
+switch:
+  - platform: restart
+    name: "Restart"
