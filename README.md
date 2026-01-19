@@ -1,5 +1,11 @@
 # ESPHome Dew Point Sensor Component
 
+[![GitHub release](https://img.shields.io/github/release/iret33/esphome-dew-point.svg)](https://github.com/iret33/esphome-dew-point/releases)
+[![GitHub downloads](https://img.shields.io/github/downloads/iret33/esphome-dew-point/total.svg)](https://github.com/iret33/esphome-dew-point/releases)
+[![GitHub stars](https://img.shields.io/github/stars/iret33/esphome-dew-point.svg?style=social)](https://github.com/iret33/esphome-dew-point)
+[![GitHub forks](https://img.shields.io/github/forks/iret33/esphome-dew-point.svg?style=social)](https://github.com/iret33/esphome-dew-point/fork)
+[![License](https://img.shields.io/github/license/iret33/esphome-dew-point.svg)](LICENSE)
+
 A custom ESPHome component that calculates dew point from existing temperature and humidity sensors using the Magnus formula.
 
 ## Features
@@ -351,4 +357,4 @@ MIT License - See LICENSE file
 
 ---
 
-**Note**: Replace `iret33` with your actual GitHub username.
+Made with ❤️ for the ESPHome community
