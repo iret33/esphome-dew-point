@@ -331,6 +331,37 @@ This will show:
 - ✅ Works even if HA is down
 - ✅ Reduces HA load
 
+## Related Projects
+
+### Home Assistant Integration
+
+If you prefer to calculate dew point in Home Assistant instead of on the ESP device, check out the companion project:
+
+**[Dew Point Calculator for Home Assistant](https://github.com/iret33/ha-dew-point-calculator)** - A Home Assistant custom integration with UI-based configuration.
+
+### Which Should You Use?
+
+| Feature | ESPHome Component | Home Assistant Integration |
+|---------|-------------------|---------------------------|
+| **Calculation Location** | On ESP device | In Home Assistant |
+| **Configuration** | YAML | UI-based |
+| **Works offline** | Yes | Requires HA running |
+| **Network dependency** | None | Requires network |
+| **Resource usage** | ~100 bytes on ESP | Uses HA resources |
+| **Best for** | Edge computing, standalone devices | Centralized setup, non-ESPHome sensors |
+| **Sensor sources** | ESPHome sensors only | Any HA sensor |
+
+**Choose ESPHome Component when:**
+- You want calculations done locally on the device
+- You need the dew point even when Home Assistant is down
+- You're building a standalone weather station
+- You want to reduce Home Assistant load
+
+**Choose Home Assistant Integration when:**
+- Your sensors aren't ESPHome devices (Zigbee, Z-Wave, etc.)
+- You prefer UI-based configuration
+- You want centralized management of all dew point calculations
+
 ## Contributing
 
 Contributions are welcome! Please:
